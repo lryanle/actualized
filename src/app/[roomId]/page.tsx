@@ -1,4 +1,7 @@
 import DrawSection from "@/components/draw-section";
+import ReactFlow from '@xyflow/react'; // Ensure correct import for ReactFlow
+import MyReactFlow from '@/components/reactflow'; // Adjust the path to your ReactFlow component
+
 import {
   ResizableHandle,
   ResizablePanel,
@@ -15,8 +18,9 @@ export default function Home() {
           <DrawSection />
         </ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel>Two</ResizablePanel>
+        <ResizablePanel><MyReactFlow /></ResizablePanel>
       </ResizablePanelGroup>
     </div>
+    
   );
 }
