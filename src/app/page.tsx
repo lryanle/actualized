@@ -1,4 +1,6 @@
 import Image from "next/image";
+import MyReactFlow from '@/components/reactflow'; // Adjust the path to your ReactFlow component
+
 
 export default function Home() {
   return (
