@@ -16,7 +16,7 @@ export default function DrawSection() {
   }, [drawRef]);
 
   return (
-    <div ref={drawRef} className="bg-black w-3/4 h-3/4">
+    <div ref={drawRef} className="bg-black w-full h-full">
       <Tldraw />
     </div>
   );

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@xyflow/react": "^12.3.4",
     "@t3-oss/env-nextjs": "^0.11.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -19,6 +20,7 @@
     "postgres": "^3.4.5",
     "react": "latest",
     "react-dom": "latest",
+    "react-resizable-panels": "^2.1.6",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "tldraw": "^3.4.0",
