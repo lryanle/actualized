@@ -7,7 +7,7 @@ const editorContext = createContext({} as { editor: Editor });
 export default function DrawSection() {
   const [editor, setEditor] = useState<Editor | null>(null);
   return (
-    <div className="bg-black w-3/4 h-3/4">
+    <div>
       <Tldraw
         // [2]
         onMount={(editor) => setEditor(editor)}
@@ -67,7 +67,7 @@ const ExternalToolbar = () => {
         >
           Pencil
         </button>
-        <button
+        {/* <button
           className="external-button"
           data-isactive={
             currentToolId === "geo" &&
@@ -81,7 +81,7 @@ const ExternalToolbar = () => {
           }}
         >
           Oval
-        </button>
+        </button> */}
       </div>
     </div>
   );
