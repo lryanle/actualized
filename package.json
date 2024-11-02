@@ -19,6 +19,7 @@
     "next": "next-14-1",
     "react": "latest",
     "react-dom": "latest",
+    "react-resizable-panels": "^2.1.6",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   },

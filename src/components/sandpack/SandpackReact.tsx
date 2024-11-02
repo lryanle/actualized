@@ -43,7 +43,19 @@ export default function SandpackReact({ code }: SandpackReactProps) {
       "embla-carousel-react": "latest"
     }}
     files={{
-      "App.js": { code, hidden: false}
+      "App.js": { code, hidden: false},
+      "/public/index.html": { code: `
+<!DOCTYPE html>
+<html lang="en" className="h-full w-full">
+  <head className="h-full w-full">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body className="h-screen w-screen">
+    <div id="root" className="h-full w-full"></div>
+  </body>
+</html>`, hidden: true}
     }}
   />;
 }

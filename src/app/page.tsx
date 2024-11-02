@@ -1,90 +1,76 @@
 "use client"
 
-import Image from "next/image";
 import SandpackReact from "@components/sandpack/SandpackReact";
+import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from "@components/ui/resizable";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <SandpackReact code={`export default function Example() {
-  return (
-    <div className="bg-gray-50">
-      <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:flex lg:items-center lg:justify-between lg:py-16 lg:px-8">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          <span className="block">Ready to dive in?</span>
-          <span className="block text-indigo-600">Start your free trial today.</span>
-        </h2>
-        <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-          <div className="inline-flex rounded-md shadow">
-            <a
-              href="#"
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white hover:bg-indigo-700"
-            >
-              Get started
-            </a>
-          </div>
-          <div className="ml-3 inline-flex rounded-md shadow">
-            <a
-              href="#"
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-indigo-600 hover:bg-indigo-50"
-            >
-              Learn more
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}`} />
+    <div className="flex justify-center items-center min-h-screen gap-16 w-screen h-[calc(100vh-100rem)]">
+      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full h-full justify-center">
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="w-full rounded-lg md:min-w-[450px]"
+        >
+          <ResizablePanel defaultSize={50}>
+            <ResizablePanelGroup direction="vertical">
+              <ResizablePanel defaultSize={25} className="m-4 border rounded-xl">
+                <div className="flex h-full items-center justify-center p-6">
+                  <span className="font-semibold">Two</span>
+                </div>
+              </ResizablePanel>
+              <ResizableHandle />
+              <ResizablePanel defaultSize={75} className="m-4 border rounded-xl">
+                <div className="flex h-full items-center justify-center p-6">
+                  <span className="font-semibold">Three</span>
+                </div>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={50} className="w-full m-4 border rounded-xl h-[calc(100vh-2rem)]">
+            <div className="flex items-center justify-center h-full w-full">
+              <SandpackReact code={testcode} />
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
+
+
+const testcode = `export default function Example() {
+  return (
+    <div className="container mx-auto px-4 py-8 bg-zinc-100">
+      <header className="text-center mb-12">
+        <h1 className="text-4xl font-bold text-blue-500">Your Website Name</h1>
+        <p className="text-lg text-gray-600">Your website tagline here</p>
+      </header>
+
+      <main>
+        <section className="bg-white p-8 rounded-lg shadow-md mb-8">
+          <h2 className="text-2xl font-semibold mb-4">About Us</h2>
+          <p>Write a brief introduction about your company or project.</p>
+        </section>
+
+        <section className="bg-white p-8 rounded-lg shadow-md mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Services</h2>
+          <ul>
+            <li className="mb-2">Service 1</li>
+            <li className="mb-2">Service 2</li>
+            <li className="mb-2">Service 3</li>
+          </ul>
+        </section>
+
+        <section className="bg-white p-8 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
+          <p>Provide contact information or a contact form.</p>
+        </section>
+      </main>
+
+      <footer className="text-center mt-12 text-gray-500">
+        &copy; {new Date().getFullYear()} Your Website Name
+      </footer>
+    </div>
+  )
+}`
