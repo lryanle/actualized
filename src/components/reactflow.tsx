@@ -39,7 +39,7 @@ export default function App() {
     };
     setNodes((nds) => [...nds, newNode]);
   }, [nodes, setNodes]);
-  
+
   const handleNodeClick = (nodeId: string) => {
     if (!sourceNode) {
       setSourceNode(nodeId); // Set source node on first click
@@ -47,6 +47,7 @@ export default function App() {
       setTargetNode(nodeId); // Set target node on second click
     }
   };
+
   const addEdgeFromInputs = () => {
     if (sourceNode && targetNode) {
       const newEdge = {
@@ -75,11 +76,14 @@ export default function App() {
       alignItems: 'center',
       backgroundColor: '#f9f9f9',
     },
+    selectedNode: {
+      border: '2px solid blue', // Highlight selected node
+    },
   };
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <div style={{ display: 'flex', flexDirection: 'row' }}> {/* Set parent to flex row */}
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
         <div style={styles.box}>
           <button onClick={addNode} style={{ margin: '5px', padding: '5px' }}>
             Add Node
@@ -92,11 +96,18 @@ export default function App() {
         </div>
       </div>
       <ReactFlow
-        nodes={nodes}
+        nodes={nodes.map(node => ({
+          ...node,
+          style: {
+            ...node.style,
+            ...(node.id === sourceNode || node.id === targetNode ? styles.selectedNode : {}),
+          },
+        }))}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onNodeClick={(event, node) => handleNodeClick(node.id)} // Handle node click
       />
     </div>
   );
