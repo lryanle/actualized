@@ -5,11 +5,13 @@ import { Tool } from "@/types/tools";
 interface NavbarWrapperProps {
   enabledTool: Tool;
   setEnabledTool: (tool: Tool | null) => void;
+  onPromptSubmit: (newPrompt: string) => void;
 }
 
 export default async function NavbarWrapper({
   enabledTool,
   setEnabledTool,
+  onPromptSubmit,
 }: NavbarWrapperProps) {
   const supabase = await createClient();
   // const {
@@ -22,6 +24,7 @@ export default async function NavbarWrapper({
       <Navbar
         enabledTool={enabledTool}
         setEnabledTool={setEnabledTool}
+        onPromptSubmit={onPromptSubmit}
         // user={user}
       />
     </nav>
