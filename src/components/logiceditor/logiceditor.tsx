@@ -11,41 +11,35 @@ import {
   Edge,
   Node,
   MarkerType,
+  NodeChange,
+  EdgeChange,
 } from "@xyflow/react";
 
 import { ConnectionLine } from './connectionline';
 import CustomEdge from '@/components/logiceditor/CustomEdge';
+import { Dispatch, SetStateAction } from 'react';
 
 import '@xyflow/react/dist/style.css';
 
 import { Tool } from "@/types/tools";
 
-const initialNodes: Node[] = [
-  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
-  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
-];
-
-const initialEdges: Edge[] = [
-  {
-    id: 'e1-2',
-    source: '1',
-    target: '2',
-    markerEnd: { type: MarkerType.ArrowClosed, width: 24, height: 24 },
-    animated: true,
-    style: { stroke: '#71717a', strokeWidth: 2 },
-    label: 'Edge Label',
-    type: 'custom',
-    data: { label: '' },
-  },
-];
-
 export default function LogicEditor({
   enabledTool,
+  nodes,
+  setNodes,
+  onNodesChange,
+  edges,
+  setEdges,
+  onEdgesChange,
 }: {
   enabledTool: Tool | null;
+  nodes: Node[];
+  setNodes: Dispatch<SetStateAction<Node[]>>;
+  onNodesChange: (changes: NodeChange[]) => void;
+  edges: Edge[];
+  setEdges: Dispatch<SetStateAction<Edge[]>>;
+  onEdgesChange: (changes: EdgeChange[]) => void;
 }) {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [sourceNode, setSourceNode] = useState<string | null>(null);
   const [targetNode, setTargetNode] = useState<string | null>(null);
 
@@ -91,7 +85,7 @@ export default function LogicEditor({
   }, [setEdges]);
 
   const edgeTypes = {
-    // @ts-ignore
+    // @ts-expect-error idk what type props is, and nothing works including any .-.
     custom: (props) => <CustomEdge {...props} onLabelChange={updateEdgeLabel} />,
   };
 
@@ -132,10 +126,18 @@ export default function LogicEditor({
           x: event.clientX - bounds.left,
           y: event.clientY - bounds.top,
         };
-        const newNode = {
+        const newNode: Node = {
           id: `${nodes.length + 1}`,
           position,
-          data: { label: `` },
+          data: { label: 'New Node' }, // Ensure a default label is provided
+          style: {
+            width: 'fit-content',
+            padding: '10px',
+            backgroundColor: '#f9fafb',
+            border: '1px solid #d1d5db',
+            borderRadius: '8px',
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.05)',
+          },
         };
         setNodes((nds) => [...nds, newNode]);
       }

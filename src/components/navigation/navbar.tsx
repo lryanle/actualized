@@ -33,7 +33,7 @@ import {
 } from "@/types/tools";
 import { useAtom } from "jotai";
 import { protoStateStore } from "@/client-store";
-import { signOut } from "@/app/login/actions";
+import { signOut } from "@/lib/actions";
 import { createClient } from "@/lib/supabase/server";
 import { User } from "@supabase/supabase-js";
 
