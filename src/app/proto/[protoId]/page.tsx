@@ -15,10 +15,46 @@ import { useCompletion } from "ai/react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { Node, Edge, MarkerType, useNodesState, useEdgesState } from "@xyflow/react";
+
+const initialNodes: Node[] = [
+  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
+  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
+];
+
+const initialEdges: Edge[] = [
+  {
+    id: 'e1-2',
+    source: '1',
+    target: '2',
+    markerEnd: { type: MarkerType.ArrowClosed, width: 24, height: 24 },
+    animated: true,
+    style: { stroke: '#71717a', strokeWidth: 2 },
+    label: 'Edge Label',
+    type: 'custom',
+    data: { label: '' },
+  },
+];
 
 export default function Page() {
 	const [editor, setEditor] = useState<Editor | null>(null);
 	const [enabledTool, setEnabledTool] = useState<Tool | null>(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [processedLogic, setProcessedLogic] = useState<string[]>([]);
+  
+  useEffect(() => {
+    const logic = nodes.map(node => {
+      const connectedEdges = edges.filter(edge => edge.source === node.id);
+      return connectedEdges.map(edge => {
+        const targetNode = nodes.find(n => n.id === edge.target);
+        return `${node.data.label} -- ${edge?.data?.label} --> ${targetNode?.data.label}`;
+      });
+    }).flat();
+
+    setProcessedLogic(logic);
+    console.log(logic);
+  }, [nodes, edges]);
 
 	const [protoState, setProtoState] = useAtom(protoStateStore);
 
@@ -51,8 +87,10 @@ export default function Page() {
 	}, [completion]);
 
 	useEffect(() => {
-		editor?.setCurrentTool(enabledTool ?? "select");
-	}, [enabledTool]);
+		if (editor && enabledTool && !editorTools.includes(enabledTool as EditorTool)) {
+			editor?.setCurrentTool(enabledTool ?? "select");
+		}
+	}, [enabledTool, editor]);
 
 	function newMessageSent(enteredPrompt: string) {
 		if (!enteredPrompt || enteredPrompt.length <= 0) {
@@ -137,7 +175,7 @@ export default function Page() {
 										Logic Editor
 									</label>
 									<div className="flex h-[calc(100%-1.5rem)] items-center justify-center p-2">
-										<LogicEditor enabledTool={enabledTool} />
+										<LogicEditor enabledTool={enabledTool} nodes={nodes} setNodes={setNodes} onNodesChange={onNodesChange} edges={edges} setEdges={setEdges} onEdgesChange={onEdgesChange} />
 									</div>
 								</ResizablePanel>
 							</ResizablePanelGroup>
