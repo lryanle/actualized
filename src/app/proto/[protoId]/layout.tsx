@@ -7,7 +7,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
 
   const { data, error } = await supabase.auth.getUser();
   if (error || !data?.user) {
-    redirect("/login");
+    redirect("/sign-in");
   }
 
   return <>{children}</>;

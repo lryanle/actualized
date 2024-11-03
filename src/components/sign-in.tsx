@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login } from "@/app/login/actions";
+import { login } from "@/lib/actions";
 
-export function LoginForm() {
+export function SignIn() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardTitle className="text-2xl">Sign In</CardTitle>
         <CardDescription>
           Enter your email below to login to your account
         </CardDescription>
@@ -30,28 +30,28 @@ export function LoginForm() {
                 id="email"
                 type="email"
                 name="email"
-                placeholder="m@example.com"
+                placeholder="me@example.com"
                 required
               />
             </div>
             <div className="grid gap-2">
-              {/* <div className="flex items-center">
+              <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
-                <Link
+                {/* <Link
                   href="#"
                   className="ml-auto inline-block text-sm underline"
                 >
                   Forgot your password?
-                </Link>
-              </div> */}
+                </Link> */}
+              </div>
               <Input id="password" name="password" type="password" required />
             </div>
             <Button type="submit" formAction={login} className="w-full">
-              Login
+              Sign in
             </Button>
-            <Button variant="outline" className="w-full">
+            {/* <Button formAction={login} variant="outline" className="w-full">
               Login with Google
-            </Button>
+            </Button> */}
           </div>
         </form>
 
