@@ -24,13 +24,19 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { getInitials } from "@/lib/utils";
-import { Tool, CanvasTool, EditorTool, canvasTools, editorTools } from "@/types/tools";
+import {
+  Tool,
+  CanvasTool,
+  EditorTool,
+  canvasTools,
+  editorTools,
+} from "@/types/tools";
 
 const toolIcons: Record<Tool, React.ReactNode> = {
-  cursor: <MousePointer2 className="scale-125" />,
-  marker: <Brush className="scale-125" />,
+  select: <MousePointer2 className="scale-125" />,
+  draw: <Brush className="scale-125" />,
   text: <Type className="scale-125" />,
-  rectangle: <Square className="scale-125" />,
+  geo: <Square className="scale-125" />,
   arrow: <MoveRight className="scale-125" />,
   logicBlock: <Square className="scale-125" />,
   logicConnector: <ArrowRight className="scale-125" />,
@@ -38,18 +44,20 @@ const toolIcons: Record<Tool, React.ReactNode> = {
 
 type NavbarProps = {
   className?: string;
-  enabledTool: Tool;
-  setEnabledTool: (tool: Tool) => void;
+  enabledTool: Tool | null;
+  setEnabledTool: (tool: Tool | null) => void;
 };
 
-export default function Navbar({ className, enabledTool, setEnabledTool }: NavbarProps) {
+export default function Navbar({
+  className,
+  enabledTool,
+  setEnabledTool,
+}: NavbarProps) {
   const profile = {
     name: "Ryan Lahlou",
     role: "Pro",
     avatar: "https://github.com/lryanle.png",
   };
-
-  const { editor, currentToolId } = useContext(editorContext);
 
   return (
     <>
@@ -65,7 +73,8 @@ export default function Navbar({ className, enabledTool, setEnabledTool }: Navba
                   : ""
               }`}
             >
-              {enabledTool && canvasTools.includes(enabledTool as CanvasTool) ? (
+              {enabledTool &&
+              canvasTools.includes(enabledTool as CanvasTool) ? (
                 toolIcons[enabledTool]
               ) : (
                 <PencilRuler className="scale-125" />
@@ -84,11 +93,11 @@ export default function Navbar({ className, enabledTool, setEnabledTool }: Navba
                 variant="outline"
                 size="icon"
                 className={`rounded-full w-full px-4 ${
-                  enabledTool === "cursor"
+                  enabledTool === "select"
                     ? "bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
                     : ""
                 }`}
-                onClick={() => setEnabledTool("cursor")}
+                onClick={() => setEnabledTool("select")}
               >
                 <MousePointer2 className="scale-125" />
                 Cursor
@@ -97,14 +106,14 @@ export default function Navbar({ className, enabledTool, setEnabledTool }: Navba
                 variant="outline"
                 size="icon"
                 className={`rounded-full w-full px-4 ${
-                  enabledTool === "marker"
+                  enabledTool === "draw"
                     ? "bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
                     : ""
                 }`}
                 onClick={() => {
-                  enabledTool !== "marker"
-                    ? setEnabledTool("marker")
-                    : setEnabledTool("cursor");
+                  enabledTool !== "draw"
+                    ? setEnabledTool("draw")
+                    : setEnabledTool("select");
                 }}
               >
                 <Brush className="scale-125" />
@@ -121,7 +130,7 @@ export default function Navbar({ className, enabledTool, setEnabledTool }: Navba
                 onClick={() => {
                   enabledTool !== "text"
                     ? setEnabledTool("text")
-                    : setEnabledTool("cursor");
+                    : setEnabledTool("select");
                 }}
               >
                 <Type className="scale-125" />
@@ -131,14 +140,14 @@ export default function Navbar({ className, enabledTool, setEnabledTool }: Navba
                 variant="outline"
                 size="icon"
                 className={`rounded-full w-full px-4 ${
-                  enabledTool === "rectangle"
+                  enabledTool === "geo"
                     ? "bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
                     : ""
                 }`}
                 onClick={() => {
-                  enabledTool !== "rectangle"
-                    ? setEnabledTool("rectangle")
-                    : setEnabledTool("cursor");
+                  enabledTool !== "geo"
+                    ? setEnabledTool("geo")
+                    : setEnabledTool("select");
                 }}
               >
                 <Square className="scale-125" />
@@ -155,7 +164,7 @@ export default function Navbar({ className, enabledTool, setEnabledTool }: Navba
                 onClick={() => {
                   enabledTool !== "arrow"
                     ? setEnabledTool("arrow")
-                    : setEnabledTool("cursor");
+                    : setEnabledTool("select");
                 }}
               >
                 <MoveRight className="scale-125" />
@@ -176,7 +185,8 @@ export default function Navbar({ className, enabledTool, setEnabledTool }: Navba
                   : ""
               }`}
             >
-              {enabledTool && editorTools.includes(enabledTool as EditorTool) ? (
+              {enabledTool &&
+              editorTools.includes(enabledTool as EditorTool) ? (
                 toolIcons[enabledTool]
               ) : (
                 <Network className="scale-125" />

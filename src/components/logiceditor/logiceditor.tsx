@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState } from "react";
 import {
   ReactFlow,
   useNodesState,
@@ -10,20 +10,31 @@ import {
   Edge,
   Node,
   MarkerType,
-} from '@xyflow/react';
+} from "@xyflow/react";
 
-import '@xyflow/react/dist/style.css';
+import "@xyflow/react/dist/style.css";
 
-import { Tool } from '@/types/tools';
+import { Tool } from "@/types/tools";
 
 const initialNodes: Node[] = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
+  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
+  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
 ];
 
-const initialEdges: Edge[] = [{ id: 'e1-2', source: '1', target: '2', markerEnd: { type: MarkerType.Arrow } }];
+const initialEdges: Edge[] = [
+  {
+    id: "e1-2",
+    source: "1",
+    target: "2",
+    markerEnd: { type: MarkerType.Arrow },
+  },
+];
 
-export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
+export default function LogicEditor({
+  enabledTool,
+}: {
+  enabledTool: Tool | null;
+}) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -31,12 +42,15 @@ export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
   const [targetNode, setTargetNode] = useState<string | null>(null);
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge({ ...params, markerEnd: { type: MarkerType.Arrow } }, eds)),
-    [setEdges],
+    (params: Connection) =>
+      setEdges((eds) =>
+        addEdge({ ...params, markerEnd: { type: MarkerType.Arrow } }, eds)
+      ),
+    [setEdges]
   );
 
   const handleNodeClick = (nodeId: string) => {
-    if (enabledTool === 'logicConnector') {
+    if (enabledTool === "logicConnector") {
       if (!sourceNode) {
         setSourceNode(nodeId);
       } else if (sourceNode && !targetNode) {
@@ -61,7 +75,7 @@ export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
 
   const handlePaneClick = useCallback(
     (event: React.MouseEvent) => {
-      if (enabledTool === 'logicBlock') {
+      if (enabledTool === "logicBlock") {
         const bounds = event.currentTarget.getBoundingClientRect();
         const position = {
           x: event.clientX - bounds.left,
@@ -99,7 +113,7 @@ export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
             ...node.style,
             ...(node.id === sourceNode || node.id === targetNode
               ? {
-                  border: '2px solid blue',
+                  border: "2px solid blue",
                 }
               : {}),
           },

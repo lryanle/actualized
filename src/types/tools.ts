@@ -1,14 +1,20 @@
 export type Tool =
-  | "cursor"
-  | "marker"
+  | "select"
+  | "draw"
   | "text"
-  | "rectangle"
+  | "geo"
   | "arrow"
   | "logicBlock"
   | "logicConnector";
 
-export type CanvasTool = "cursor" | "marker" | "text" | "rectangle" | "arrow";
-export const canvasTools: CanvasTool[] = ["cursor", "marker", "text", "rectangle", "arrow"];
+export type CanvasTool = "select" | "draw" | "text" | "geo" | "arrow";
+export const canvasTools: CanvasTool[] = [
+  "select",
+  "draw",
+  "text",
+  "geo",
+  "arrow",
+];
 
 export type EditorTool = "logicBlock" | "logicConnector";
 export const editorTools: EditorTool[] = ["logicBlock", "logicConnector"];
