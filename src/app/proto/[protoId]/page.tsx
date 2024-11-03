@@ -1,20 +1,16 @@
-import DrawSection from "@/components/draw-section";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
+import ClientPage from "./client-page";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return (
-    <div className="w-screen h-screen">
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel>
-          <DrawSection />
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel>Two</ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  );
+export default async function Page() {
+	// const supabase = await createClient();
+
+	// const { data, error } = await supabase.auth.getUser();
+	// if (error || !data?.user) {
+	// 	console.log("[Doing Redirect] error Value: ", error);
+	// 	console.log("[Doing Redirect] data Value: ", data);
+	// 	redirect("/sign-in");
+	// }
+
+	return <ClientPage />;
 }
