@@ -1,19 +1,18 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
-import { Editor, Tldraw, useValue } from "tldraw";
 import SandpackReact from "@/components/sandpack/SandpackReact";
+import { useContext } from "react";
+import { editorContext } from "@/components/editor-wrapper";
 import {
   ResizablePanel,
   ResizablePanelGroup,
   ResizableHandle,
 } from "@/components/ui/resizable";
+import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
 import NavbarWrapper from "@/components/navigation/navbar";
 import { Tool, canvasTools, editorTools, CanvasTool, EditorTool } from "@/types/tools";
 import LogicEditor from "@/components/logiceditor/logiceditor";
-
-const editorContext = createContext({} as { editor: Editor });
 
 export default function Page() {
   const [editor, setEditor] = useState<Editor | null>(null);

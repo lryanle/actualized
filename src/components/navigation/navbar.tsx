@@ -49,6 +49,8 @@ export default function Navbar({ className, enabledTool, setEnabledTool }: Navba
     avatar: "https://github.com/lryanle.png",
   };
 
+  const { editor, currentToolId } = useContext(editorContext);
+
   return (
     <>
       <div className={`flex items-center space-x-1`}>
