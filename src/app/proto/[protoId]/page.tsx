@@ -13,6 +13,8 @@ import { useAtom, getDefaultStore } from "jotai";
 import { protoStateStore, type ProtoState } from "@/client-store";
 import { useCompletion } from "ai/react";
 import { useDebounce } from "@uidotdev/usehooks";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 
 export default function Page() {
 	const [editor, setEditor] = useState<Editor | null>(null);
