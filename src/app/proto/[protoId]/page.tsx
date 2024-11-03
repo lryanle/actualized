@@ -2,109 +2,160 @@
 
 import SandpackReact from "@/components/sandpack/SandpackReact";
 import { useEffect, useState } from "react";
-import {
-  ResizablePanel,
-  ResizablePanelGroup,
-  ResizableHandle,
-} from "@/components/ui/resizable";
+import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from "@/components/ui/resizable";
 import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
 import NavbarWrapper from "@/components/navigation/navbar";
-import {
-  Tool,
-  canvasTools,
-  editorTools,
-  CanvasTool,
-  EditorTool,
-} from "@/types/tools";
+import { Tool, canvasTools, editorTools, CanvasTool, EditorTool } from "@/types/tools";
 import { Editor, useValue } from "tldraw";
 import LogicEditor from "@/components/logiceditor/logiceditor";
+import { useAtom, getDefaultStore } from "jotai";
+import { protoStateStore, type ProtoState } from "@/client-store";
+import { useCompletion } from "ai/react";
+import { useDebounce } from "@uidotdev/usehooks";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 export default function Page() {
+	const [editor, setEditor] = useState<Editor | null>(null);
+	const [enabledTool, setEnabledTool] = useState<Tool | null>(null);
 
-  const [editor, setEditor] = useState<Editor | null>(null);
-  const [enabledTool, setEnabledTool] = useState<Tool | null>(null);
+	const [protoState, setProtoState] = useAtom(protoStateStore);
 
-  useEffect(() => {
-    editor?.setCurrentTool(enabledTool ?? "select");
-  }, [enabledTool, editor]);
+	const { complete: requestCompletion, completion } = useCompletion({
+		api: "/api/ai/ui",
+		onFinish: (_, finishedCompletion) => {
+			setProtoState((draftState) => {
+				draftState.chatMessages.push({
+					role: "assistant",
+					content: finishedCompletion,
+					experimental_attachments: [],
+				});
+				return draftState;
+			});
+		},
+	});
 
-  return (
-    <>
-      <div className="fixed bottom-6 border left-1/2 -translate-x-1/2 flex items-center space-x-3 rounded-full bg-white/80 p-2 shadow-lg drop-shadow-lg backdrop-blur-sm z-[5000]">
-        <NavbarWrapper
-          enabledTool={enabledTool}
-          setEnabledTool={setEnabledTool}
-        />
-      </div>
-      <div className="flex justify-center items-center min-h-screen gap-16 w-screen h-[calc(100vh-100rem)]">
-        <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full h-full justify-center">
-          <ResizablePanelGroup
-            direction="horizontal"
-            className="w-full rounded-lg md:min-w-[450px]"
-          >
-            <ResizablePanel defaultSize={50}>
-              <ResizablePanelGroup direction="vertical">
-                <ResizablePanel
-                  defaultSize={50}
-                  className={`m-4 rounded-xl border ${
-                    enabledTool
-                      ? canvasTools.includes(enabledTool as CanvasTool)
-                        ? "border-blue-600 border-opacity-20"
-                        : "border-red-400 border-opacity-20 cursor-not-allowed"
-                      : ""
-                  }`}
-                >
-                  <label className="relative ml-6 text-muted-foreground font-bold text-sm leading-none top-1">
-                    Canvas Editor
-                  </label>
-                  <div className="flex h-[calc(100%-1.5rem)] items-center justify-center p-6 pt-2">
-                    <span className="font-semibold w-full h-full">
-                      <Tldraw
-                        // [2]
-                        hideUi
-                        onMount={(editor) => setEditor(editor)}
-                        components={{ Toolbar: null }}
-                      />
-                    </span>
-                  </div>
-                </ResizablePanel>
-                <ResizableHandle />
-                <ResizablePanel
-                  defaultSize={50}
-                  className={`m-4 rounded-xl border ${
-                    enabledTool
-                      ? editorTools.includes(enabledTool as EditorTool)
-                        ? "border-blue-600 border-opacity-20"
-                        : "border-red-400 border-opacity-20 cursor-not-allowed"
-                      : ""
-                  }`}
-                >
-                  <label className="relative ml-6 text-muted-foreground font-bold text-sm leading-none top-1">
-                    Logic Editor
-                  </label>
-                  <div className="flex h-[calc(100%-1.5rem)] items-center justify-center p-2">
-                    <LogicEditor enabledTool={enabledTool} />
-                  </div>
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            </ResizablePanel>
-            <ResizableHandle />
-            <ResizablePanel
-              defaultSize={50}
-              className="w-full m-4 border rounded-xl h-[calc(100vh-2rem)]"
-            >
-              <div className="flex items-center justify-center h-full w-full">
-                <SandpackReact code={testcode} />
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </main>
-      </div>
-    </>
-  );
+	useEffect(() => {
+		if (completion && completion.length > 0) {
+			console.log("[Completion UserEffect] completion update or did mount: ");
+			console.log(completion);
+			setProtoState((prevState) => {
+				prevState.currentCode = completion;
+				console.log("State Updated!");
+				return prevState;
+			});
+			console.log("state post update: ");
+			console.log(protoState);
+		}
+	}, [completion]);
+
+	useEffect(() => {
+		editor?.setCurrentTool(enabledTool ?? "select");
+	}, [enabledTool]);
+
+	function newMessageSent(enteredPrompt: string) {
+		if (!enteredPrompt || enteredPrompt.length <= 0) {
+			alert("Please enter some text :)");
+			return;
+		}
+
+		setProtoState((draftState) => {
+			draftState.chatMessages.push({
+				role: "user",
+				content: enteredPrompt,
+				experimental_attachments: [],
+			});
+
+			requestCompletion("", {
+				body: {
+					chatMessages: draftState.chatMessages,
+					currentCode: draftState.currentCode,
+					stateMachine: draftState.stateMachine,
+				} satisfies ProtoState,
+			});
+
+			return draftState;
+		});
+	}
+
+	const debouncedGeneratedCode = useDebounce(protoState.currentCode, 1000);
+
+	return (
+		<>
+			<div className="fixed bottom-6 border left-1/2 -translate-x-1/2 flex items-center space-x-3 rounded-full bg-white/80 p-2 shadow-lg drop-shadow-lg backdrop-blur-sm z-[5000]">
+				<NavbarWrapper
+					onPromptSubmit={newMessageSent}
+					enabledTool={enabledTool}
+					setEnabledTool={setEnabledTool}
+				/>
+			</div>
+			<div className="flex justify-center items-center min-h-screen gap-16 w-screen h-[calc(100vh-100rem)]">
+				<main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full h-full justify-center">
+					<ResizablePanelGroup
+						direction="horizontal"
+						className="w-full rounded-lg md:min-w-[450px]"
+					>
+						<ResizablePanel defaultSize={50}>
+							<ResizablePanelGroup direction="vertical">
+								<ResizablePanel
+									defaultSize={50}
+									className={`m-4 rounded-xl border ${
+										enabledTool
+											? canvasTools.includes(enabledTool as CanvasTool)
+												? "border-blue-600 border-opacity-20"
+												: "border-red-400 border-opacity-20 cursor-not-allowed"
+											: ""
+									}`}
+								>
+									<label className="relative ml-6 text-muted-foreground font-bold text-sm leading-none top-1">
+										Canvas Editor
+									</label>
+									<div className="flex h-[calc(100%-1.5rem)] items-center justify-center p-6 pt-2">
+										<span className="font-semibold w-full h-full">
+											<Tldraw
+												// [2]
+												hideUi
+												onMount={(editor) => setEditor(editor)}
+												components={{ Toolbar: null }}
+											/>
+										</span>
+									</div>
+								</ResizablePanel>
+								<ResizableHandle />
+								<ResizablePanel
+									defaultSize={50}
+									className={`m-4 rounded-xl border ${
+										enabledTool
+											? editorTools.includes(enabledTool as EditorTool)
+												? "border-blue-600 border-opacity-20"
+												: "border-red-400 border-opacity-20 cursor-not-allowed"
+											: ""
+									}`}
+								>
+									<label className="relative ml-6 text-muted-foreground font-bold text-sm leading-none top-1">
+										Logic Editor
+									</label>
+									<div className="flex h-[calc(100%-1.5rem)] items-center justify-center p-2">
+										<LogicEditor enabledTool={enabledTool} />
+									</div>
+								</ResizablePanel>
+							</ResizablePanelGroup>
+						</ResizablePanel>
+						<ResizableHandle />
+						<ResizablePanel
+							defaultSize={50}
+							className="w-full m-4 border rounded-xl h-[calc(100vh-2rem)]"
+						>
+							<div className="flex items-center justify-center h-full w-full">
+								<SandpackReact code={debouncedGeneratedCode ?? ""} />
+							</div>
+						</ResizablePanel>
+					</ResizablePanelGroup>
+				</main>
+			</div>
+		</>
+	);
 }
 
 const testcode = `export default function Example() {

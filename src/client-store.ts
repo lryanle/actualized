@@ -1,5 +1,11 @@
-import { atom } from "jotai";
 import { uiGeneratorRequestSchema } from "./validators";
 import { z } from "zod";
+import { atomWithImmer } from "jotai-immer";
 
-export const uiGeneratorRequestAtom = atom<z.infer<typeof uiGeneratorRequestSchema> | null>(null);
+export type ProtoState = z.infer<typeof uiGeneratorRequestSchema>;
+
+export const protoStateStore = atomWithImmer<ProtoState>({
+	stateMachine: null,
+	currentCode: null,
+	chatMessages: [],
+});
