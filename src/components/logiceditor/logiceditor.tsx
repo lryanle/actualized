@@ -85,8 +85,7 @@ export default function LogicEditor({
   }, [setEdges]);
 
   const edgeTypes = {
-    // @ts-expect-error
-    // idk what type props is, and nothing works including any .-.
+    // @ts-expect-error idk what type props is, and nothing works including any .-.
     custom: (props) => <CustomEdge {...props} onLabelChange={updateEdgeLabel} />,
   };
 
