@@ -19,14 +19,17 @@ import {
 } from "@/types/tools";
 import { Editor, useValue } from "tldraw";
 import LogicEditor from "@/components/logiceditor/logiceditor";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 
 export default function Page() {
+
   const [editor, setEditor] = useState<Editor | null>(null);
   const [enabledTool, setEnabledTool] = useState<Tool | null>(null);
 
   useEffect(() => {
     editor?.setCurrentTool(enabledTool ?? "select");
-  }, [enabledTool]);
+  }, [enabledTool, editor]);
 
   return (
     <>
