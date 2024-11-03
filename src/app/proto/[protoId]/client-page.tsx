@@ -3,7 +3,7 @@
 import SandpackReact from "@/components/sandpack/SandpackReact";
 import { useEffect, useState } from "react";
 import { ResizablePanel, ResizablePanelGroup, ResizableHandle } from "@/components/ui/resizable";
-import { Tldraw } from "tldraw";
+import { Tldraw, useEditor, exportToBlob } from "tldraw";
 import "tldraw/tldraw.css";
 import NavbarWrapper from "@/components/navigation/navbar";
 import { Tool, canvasTools, editorTools, CanvasTool, EditorTool } from "@/types/tools";
@@ -98,17 +98,21 @@ export default function ClientPage() {
 		}
 	}, [enabledTool, editor]);
 
-	function newMessageSent(enteredPrompt: string) {
+	async function newMessageSent(enteredPrompt: string) {
 		if (!enteredPrompt || enteredPrompt.length <= 0) {
 			alert("Please enter some text :)");
 			return;
 		}
 
+		const imageb64 = await getb64editor();
+
+		const images = imageb64 ? [{ url: imageb64, contentType: "image/png" }] : [];
+
 		setProtoState((draftState) => {
 			draftState.chatMessages.push({
 				role: "user",
 				content: enteredPrompt,
-				experimental_attachments: [],
+				experimental_attachments: images,
 			});
 
 			requestCompletion("", {
@@ -121,6 +125,38 @@ export default function ClientPage() {
 
 			return draftState;
 		});
+	}
+
+	async function blobToBase64(blob: Blob): Promise<string> {
+		const reader = new FileReader();
+		return new Promise((resolve, reject) => {
+			reader.onloadend = () => {
+				const result = reader.result as string; // Type assertion to string
+				resolve(result.split(",")[1]);
+			};
+			reader.onerror = () => reject(new Error("Failed to convert Blob to Base64"));
+			reader.readAsDataURL(blob);
+		});
+	}
+
+	async function getb64editor() {
+		if (!editor) {
+			return null;
+		}
+
+		const shapeIDs = editor.getCurrentPageShapeIds();
+		if (shapeIDs.size === 0) {
+			return null;
+		}
+
+		const blob = await exportToBlob({
+			editor,
+			ids: [...shapeIDs],
+			format: "png",
+			opts: { background: false },
+		});
+
+		return "data:image/png;base64," + (await blobToBase64(blob));
 	}
 
 	const debouncedGeneratedCode = useDebounce(protoState.currentCode, 1000);

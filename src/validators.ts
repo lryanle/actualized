@@ -10,6 +10,7 @@ export const uiGeneratorRequestSchema = z.object({
 			experimental_attachments: z.array(
 				z.object({
 					url: z.string(),
+					contentType: z.string().optional(),
 				})
 			),
 		})
