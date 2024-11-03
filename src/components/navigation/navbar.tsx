@@ -23,6 +23,16 @@ import { getInitials } from "@/lib/utils";
 import { Tool, CanvasTool, EditorTool, canvasTools, editorTools } from "@/types/tools";
 import { useAtom } from "jotai";
 import { protoStateStore } from "@/client-store";
+import {
+  Tool,
+  CanvasTool,
+  EditorTool,
+  canvasTools,
+  editorTools,
+} from "@/types/tools";
+import { signOut } from "@/app/login/actions";
+import { createClient } from "@/lib/supabase/server";
+import { User } from "@supabase/supabase-js";
 
 const toolIcons: Record<Tool, React.ReactNode> = {
 	select: <MousePointer2 className="scale-125" />,
@@ -35,23 +45,21 @@ const toolIcons: Record<Tool, React.ReactNode> = {
 };
 
 type NavbarProps = {
-	className?: string;
-	enabledTool: Tool | null;
-	setEnabledTool: (tool: Tool | null) => void;
-	onPromptSubmit: (newPrompt: string) => void;
+  className?: string;
+  enabledTool: Tool | null;
+  setEnabledTool: (tool: Tool | null) => void;
 };
 
 export default function Navbar({
-	className,
-	enabledTool,
-	setEnabledTool,
-	onPromptSubmit,
+  className,
+  enabledTool,
+  setEnabledTool,
 }: NavbarProps) {
-	const profile = {
-		name: "Ryan Lahlou",
-		role: "Pro",
-		avatar: "https://github.com/lryanle.png",
-	};
+  const profile = {
+    name: "Ryan Lahlou",
+    role: "Pro",
+    avatar: "https://github.com/lryanle.png",
+  };
 
 	const [protoState, setProtoState] = useAtom(protoStateStore);
 	const [prompt, setPrompt] = React.useState("");
@@ -260,34 +268,34 @@ export default function Navbar({
 				</Button>
 			</div>
 
-			<Separator orientation="vertical" className="h-10" />
-
-			<Popover>
-				<PopoverTrigger asChild>
-					<Button
-						variant="ghost"
-						size="icon"
-						className="h-10 w-10 rounded-full drop-shadow"
-					>
-						<Avatar className="h-10 w-10 border">
-							<AvatarImage src={profile.avatar} />
-							<AvatarFallback>{getInitials(profile.name)}</AvatarFallback>
-						</Avatar>
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent align="center" className="w-auto" sideOffset={12}>
-					<div className="flex justify-center items-center space-x-4">
-						<Avatar>
-							<AvatarImage src={profile.avatar} />
-							<AvatarFallback>{getInitials(profile.name)}</AvatarFallback>
-						</Avatar>
-						<div className="space-y-1">
-							<h4 className="text-sm font-semibold">{profile.name}</h4>
-							<Badge className="bg-blue-500 hover:bg-blue-600">{profile.role}</Badge>
-						</div>
-					</div>
-				</PopoverContent>
-			</Popover>
-		</>
-	);
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 rounded-full drop-shadow"
+          >
+            <Avatar className="h-10 w-10 border">
+              <AvatarImage src={profile.avatar} />
+              <AvatarFallback>{getInitials(profile.name)}</AvatarFallback>
+            </Avatar>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent align="center" className="w-auto" sideOffset={12}>
+          <div className="flex justify-center items-center space-x-4">
+            <Avatar>
+              <AvatarImage src={profile.avatar} />
+              <AvatarFallback>{getInitials(profile.name)}</AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <h4 className="text-sm font-semibold">{profile.name}</h4>
+              <Badge className="bg-blue-500 hover:bg-blue-600">
+                {profile.role}
+              </Badge>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </>
+  );
 }
