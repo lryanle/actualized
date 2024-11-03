@@ -11,6 +11,7 @@ import {
 import "tldraw/tldraw.css";
 import NavbarWrapper from "@/components/navigation/navbar";
 import { Tool, canvasTools, editorTools, CanvasTool, EditorTool } from "@/types/tools";
+import LogicEditor from "@/components/logiceditor/logiceditor";
 
 const editorContext = createContext({} as { editor: Editor });
 
@@ -66,8 +67,8 @@ export default function Page() {
                   <label className="relative ml-6 text-muted-foreground font-bold text-sm leading-none top-1">
                     Logic Editor
                   </label>
-                  <div className="flex h-full items-center justify-center p-2">
-                    <span className="font-semibold">Three</span>
+                  <div className="flex h-[calc(100%-1.5rem)] items-center justify-center p-2">
+                    <LogicEditor enabledTool={enabledTool} />
                   </div>
                 </ResizablePanel>
               </ResizablePanelGroup>
