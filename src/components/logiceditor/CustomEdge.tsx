@@ -9,6 +9,7 @@ import {
 
 interface CustomEdgeProps extends EdgeProps<Edge<{ label: string }>> {
   onLabelChange: (id: string, newLabel: string) => void;
+  onRemoveEdge: (id: string) => void; // Add a new prop to remove the edge
 }
 
 const CustomEdge: FC<CustomEdgeProps> = ({
@@ -21,25 +22,25 @@ const CustomEdge: FC<CustomEdgeProps> = ({
   targetPosition,
   data,
   onLabelChange,
+  onRemoveEdge, // Use the new prop
 }) => {
   const [inputValue, setInputValue] = useState<string>(data?.label || '');
+  const [hovered, setHovered] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  
   useEffect(() => {
     setInputValue(data?.label || '');
   }, [data?.label]);
 
-  
   const saveLabel = () => {
     if (data?.label !== inputValue) {
       onLabelChange(id, inputValue);
     }
   };
 
-  
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    onRemoveEdge(id); // Remove the edge when clicked
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -63,7 +64,15 @@ const CustomEdge: FC<CustomEdgeProps> = ({
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} />
+      <BaseEdge
+        id={id}
+        path={edgePath}
+        markerEnd="url(#arrowhead)"
+        style={{
+          stroke: hovered ? '#ff0000' : '#71717a',
+          strokeWidth: 4,
+        }}
+      />
       <EdgeLabelRenderer>
         <div
           style={{
@@ -87,8 +96,8 @@ const CustomEdge: FC<CustomEdgeProps> = ({
               e.stopPropagation();
               setInputValue(e.target.value);
             }}
-            onClick={handleClick}
-            onFocus={() => handleClick}
+            onClick={(e) => e.stopPropagation()}
+            onFocus={(e) => e.stopPropagation()}
             onBlur={saveLabel}
             onKeyDown={handleKeyDown}
             style={{
