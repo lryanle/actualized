@@ -1,36 +1,177 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Project Summary
 
-## Getting Started
+- [src](src/): Main application codebase
+- [src/app](src/app/): Application-specific code and routing
+- [src/app/api](src/app/api/): API services and endpoints
+- [src/app/auth](src/app/auth/): User authentication modules
+- [src/components](src/components/): Reusable UI components
+- [src/lib](src/lib/): Utility libraries and helpers
+- [src/types](src/types/): TypeScript type definitions
+- [public](public/): Publicly accessible static assetsd
 
-First, run the development server:
+## Setting Up
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Insert your environment variables.
+
+## Run Locally
+
+1. Clone AIAIO repository:  
+```bash  
+git clone https://github.com/lryanle/AIAIO  
+```
+2. Install the dependencies with one of the package managers listed below:  
+```bash  
+pnpm install  
+bun install  
+npm install  
+yarn install  
+```
+3. Start the development mode:  
+```bash  
+pnpm dev  
+bun dev  
+npm run dev  
+yarn dev  
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contributors
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+[![Contributors](https://contrib.rocks/image?repo=lryanle/AIAIO)](https://github.com/lryanle/AIAIO/graphs/contributors)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## FAQ
 
-## Learn More
+#### 1.What is this project about?
 
-To learn more about Next.js, take a look at the following resources:
+This project aims to **briefly describe your project's purpose and goals.**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### 2.How can I contribute to this project?
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Yes, we welcome contributions! Please refer to our [Contribution Guidelines](CONTRIBUTING.md) for more information on how to contribute.
 
-## Deploy on Vercel
+#### 3.What is this project about?
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Your answer.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+This project is licensed under the **MIT License** - see the [MIT License](https://github.com/lryanle/AIAIO/blob/main/LICENSE) file for details.
+
+## Table of Contents
+
+- [Project Summary](#project-summary)
+- [Setting Up](#setting-up)
+- [Run Locally](#run-locally)
+- [Contributors](#contributors)
+- [FAQ](#faq)
+    - [1.What is this project about?](#1what-is-this-project-about)
+    - [2.How can I contribute to this project?](#2how-can-i-contribute-to-this-project)
+    - [3.What is this project about?](#3what-is-this-project-about)
+- [License](#license)
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [Project Structure](#project-structure)
+- [Deploy](#deploy)
+
+## Overview
+
+AIAIO (@HackTX 2024) is a rapid prototyping tool using Vercel's AI SDK, Clerk, CodeSandbox's Sandpack, React-flow, TLDRAW, Shadcn/UI, Supabase, T3, and more.
+
+## Project Structure
+
+```bash
+├── .eslintrc.json
+├── .gitignore
+├── .terraform.lock.hcl
+├── .terraform.tfstate.lock.info
+├── LICENSE
+├── README.md
+├── components.json
+├── declarations.d.ts
+├── main.tf
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── public
+│   └── logo.svg
+├── src
+│   ├── app
+│   │   ├── api
+│   │   │   └── ai
+│   │   │       └── ui
+│   │   │           └── route.ts
+│   │   ├── auth
+│   │   │   └── confirm
+│   │   │       └── route.ts
+│   │   ├── favicon.ico
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   ├── middleware.ts
+│   │   ├── page.tsx
+│   │   ├── proto
+│   │   │   └── [protoId]
+│   │   │       ├── client-page.tsx
+│   │   │       └── page.tsx
+│   │   ├── sign-in
+│   │   │   └── [[...sign-in]]
+│   │   │       └── page.tsx
+│   │   └── sign-up
+│   │       └── [[...sign-up]]
+│   │           └── page.tsx
+│   ├── client-store.ts
+│   ├── components
+│   │   ├── draw-section.tsx
+│   │   ├── logiceditor
+│   │   │   ├── CustomEdge.tsx
+│   │   │   ├── connectionline.tsx
+│   │   │   └── logiceditor.tsx
+│   │   ├── navigation
+│   │   │   ├── navbar-wrapper.tsx
+│   │   │   └── navbar.tsx
+│   │   ├── sandpack
+│   │   │   ├── SandpackBase.tsx
+│   │   │   ├── SandpackCore.tsx
+│   │   │   └── SandpackReact.tsx
+│   │   ├── sign-in.tsx
+│   │   ├── sign-up.tsx
+│   │   └── ui
+│   │       ├── avatar.tsx
+│   │       ├── badge.tsx
+│   │       ├── button.tsx
+│   │       ├── card.tsx
+│   │       ├── input.tsx
+│   │       ├── label.tsx
+│   │       ├── popover.tsx
+│   │       ├── resizable.tsx
+│   │       ├── separator.tsx
+│   │       ├── tabs.tsx
+│   │       ├── text-hover-effect.tsx
+│   │       ├── textarea.tsx
+│   │       └── tooltip.tsx
+│   ├── db
+│   │   └── index.ts
+│   ├── env.mjs
+│   ├── lib
+│   │   ├── actions.ts
+│   │   ├── supabase
+│   │   │   ├── client.ts
+│   │   │   ├── middleware.ts
+│   │   │   └── server.ts
+│   │   └── utils.ts
+│   ├── prompt.ts
+│   ├── types
+│   │   └── tools.ts
+│   └── validators.ts
+├── tailwind.config.ts
+└── tsconfig.json
+
+```
+
+## Deployment
+
+https://oldmcdonaldhadafarmAIAIO.tech
+
+# Acknowledgements
+
+- [TLDRAW](https://github.com/TLDRAW/TLDRAW) - Inspiration for turning designs into code. Our prompt is partially based on their work.
+- [V0](https://v0.dev) - Inspiration of turning words into code. Our application is heavily inspired by V0 and their ethos
