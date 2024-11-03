@@ -1,6 +1,7 @@
 "use client"
 
-import { SandpackProvider, SandpackLayout, SandpackCodeEditor, SandpackPreview, SandpackFileExplorer } from "@codesandbox/sandpack-react";
+import { SandpackProvider, SandpackLayout, SandpackFileExplorer } from "@codesandbox/sandpack-react";
+import SandpackCore from "@/components/sandpack/SandpackCore"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 
@@ -15,7 +16,6 @@ interface SandpackBaseProps {
 
 export default function SandpackBase({ template, files, dependencies }: SandpackBaseProps) {
   const [value, setValue] = useState("preview"); // manual control to prevent sandbox preview from re-rendering :)))))
-  const [code, setCode] = useState(files);
 
   return (
     <SandpackProvider
@@ -46,19 +46,7 @@ export default function SandpackBase({ template, files, dependencies }: Sandpack
               <TabsTrigger value="code">Code Editor</TabsTrigger>
             </TabsList>
             <div className="w-full h-full">
-              <div className={`${value === "preview" ? "" : "hidden"} w-full h-full`}>
-                <SandpackPreview style={{ height: "100%", width: "100%" }}/>
-              </div>
-              <div className={`${value === "code" ? "" : "hidden"} w-full h-full flex justify-center items-center`}>
-                {/* <SandpackFileExplorer style={{ height: "100%", width: "100%" }}/> */}
-                <SandpackCodeEditor
-                  className="h-full w-full"
-                  style={{ height: "100%", width: "100%" }}
-                  showLineNumbers
-                  showInlineErrors
-                  initMode="immediate"
-                />
-              </div>
+              <SandpackCore value={value as "code" | "preview"} />
             </div>
           </Tabs>
         </div>
