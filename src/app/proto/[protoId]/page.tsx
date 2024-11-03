@@ -2,14 +2,16 @@
 
 import { createContext, useContext, useState } from "react";
 import { Editor, Tldraw, useValue } from "tldraw";
-import SandpackReact from "@components/sandpack/SandpackReact";
+import SandpackReact from "@/components/sandpack/SandpackReact";
 import {
   ResizablePanel,
   ResizablePanelGroup,
   ResizableHandle,
-} from "@components/ui/resizable";
+} from "@/components/ui/resizable";
+import "tldraw/tldraw.css";
 
 const editorContext = createContext({} as { editor: Editor });
+
 export default function Page() {
   const [editor, setEditor] = useState<Editor | null>(null);
 
@@ -18,6 +20,7 @@ export default function Page() {
     () => editor?.getCurrentToolId(),
     [editor]
   );
+
   return (
     <div className="flex justify-center items-center min-h-screen gap-16 w-screen h-[calc(100vh-100rem)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full h-full justify-center">
@@ -28,13 +31,15 @@ export default function Page() {
           <ResizablePanel defaultSize={50}>
             <ResizablePanelGroup direction="vertical">
               <ResizablePanel
-                defaultSize={25}
+                defaultSize={50}
                 className="m-4 border rounded-xl"
               >
-                <div className="flex h-full items-center justify-center p-6">
+                <label className="relative ml-6 text-muted-foreground font-bold text-sm leading-none top-1">Canvas Editor</label>
+                <div className="flex h-[calc(100%-1.5rem)] items-center justify-center p-6 pt-2">
                   <span className="font-semibold w-full h-full">
                     <Tldraw
                       // [2]
+                      hideUi
                       onMount={(editor) => setEditor(editor)}
                       components={{ Toolbar: null }}
                     />
@@ -43,10 +48,11 @@ export default function Page() {
               </ResizablePanel>
               <ResizableHandle />
               <ResizablePanel
-                defaultSize={75}
+                defaultSize={50}
                 className="m-4 border rounded-xl"
               >
-                <div className="flex h-full items-center justify-center p-6">
+                <label className="relative ml-6 text-muted-foreground font-bold text-sm leading-none top-1">Logic Editor</label>
+                <div className="flex h-full items-center justify-center p-2">
                   <span className="font-semibold">Three</span>
                 </div>
               </ResizablePanel>

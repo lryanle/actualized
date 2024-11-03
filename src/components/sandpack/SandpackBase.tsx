@@ -1,7 +1,7 @@
 "use client"
 
 import { SandpackProvider, SandpackLayout, SandpackCodeEditor, SandpackPreview, SandpackFileExplorer } from "@codesandbox/sandpack-react";
-import { Tabs, TabsList, TabsTrigger } from "@components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 
 interface SandpackBaseProps {
