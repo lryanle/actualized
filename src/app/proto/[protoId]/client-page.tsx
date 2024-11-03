@@ -60,7 +60,11 @@ export default function ClientPage() {
 
 	const [protoState, setProtoState] = useAtom(protoStateStore);
 
-	const { complete: requestCompletion, completion } = useCompletion({
+	const {
+		complete: requestCompletion,
+		completion,
+		isLoading,
+	} = useCompletion({
 		api: "/api/ai/ui",
 		onFinish: (_, finishedCompletion) => {
 			setProtoState((draftState) => {
@@ -195,8 +199,23 @@ export default function ClientPage() {
 							defaultSize={50}
 							className="w-full m-4 border rounded-xl h-[calc(100vh-2rem)]"
 						>
-							<div className="flex items-center justify-center h-full w-full">
+							<div
+								className={
+									!isLoading
+										? "flex items-center justify-center h-full w-full"
+										: "hidden"
+								}
+							>
 								<SandpackReact code={debouncedGeneratedCode ?? ""} />
+							</div>
+							<div
+								className={
+									isLoading
+										? "flex items-center justify-center h-full w-full"
+										: "hidden"
+								}
+							>
+								<h1>Generating...</h1>
 							</div>
 						</ResizablePanel>
 					</ResizablePanelGroup>
