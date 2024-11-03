@@ -13,6 +13,8 @@ type ReqBody = z.infer<typeof uiGeneratorRequestSchema>;
 export async function POST(req: Request) {
 	const body: ReqBody = await req.json();
 
+	console.log("request body: ", body);
+
 	const data = uiGeneratorRequestSchema.safeParse(body);
 
 	if (!data.success) {
@@ -21,6 +23,9 @@ export async function POST(req: Request) {
 
 	// Note: you can pull the stateMachine here
 	const { chatMessages } = data.data;
+
+	console.log("Just got a completion request! Current state:");
+	console.log(chatMessages);
 
 	const result = await streamText({
 		model: openai("gpt-4o"),
