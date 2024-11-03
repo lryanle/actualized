@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useState, useEffect } from 'react';
+
 import {
   ReactFlow,
   useNodesState,
@@ -10,18 +11,18 @@ import {
   Edge,
   Node,
   MarkerType,
-} from '@xyflow/react';
+} from "@xyflow/react";
 
 import { ConnectionLine } from './connectionline';
 import CustomEdge from '@/components/logiceditor/CustomEdge';
 
 import '@xyflow/react/dist/style.css';
 
-import { Tool } from '@/types/tools';
+import { Tool } from "@/types/tools";
 
 const initialNodes: Node[] = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
+  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
+  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
 ];
 
 const initialEdges: Edge[] = [
@@ -34,18 +35,20 @@ const initialEdges: Edge[] = [
     style: { stroke: '#71717a', strokeWidth: 2 },
     label: 'Edge Label',
     type: 'custom',
-    data: { label: 'Edge Label' },
+    data: { label: '' },
   },
 ];
 
-
-export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
+export default function LogicEditor({
+  enabledTool,
+}: {
+  enabledTool: Tool | null;
+}) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [sourceNode, setSourceNode] = useState<string | null>(null);
   const [targetNode, setTargetNode] = useState<string | null>(null);
 
-  // Load state from localStorage
   useEffect(() => {
     const savedNodes = JSON.parse(localStorage.getItem('flow-nodes') || '[]');
     const savedEdges = JSON.parse(localStorage.getItem('flow-edges') || '[]');
@@ -55,7 +58,6 @@ export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
     }
   }, [setNodes, setEdges]);
 
-  // Save state to localStorage
   useEffect(() => {
     localStorage.setItem('flow-nodes', JSON.stringify(nodes));
     localStorage.setItem('flow-edges', JSON.stringify(edges));
@@ -67,7 +69,7 @@ export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
         addEdge(
           {
             ...params,
-            markerEnd: { type: MarkerType.ArrowClosed, color: '#71717a', width: 12, height: 12 },
+            markerEnd: { type: MarkerType.ArrowClosed, color: '#71717a', width: 24, height: 24 },
             animated: true,
             style: { stroke: '#71717a', strokeWidth: 4 },
             label: 'New Edge',
@@ -89,11 +91,12 @@ export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
   }, [setEdges]);
 
   const edgeTypes = {
+    // @ts-ignore
     custom: (props) => <CustomEdge {...props} onLabelChange={updateEdgeLabel} />,
   };
 
   const handleNodeClick = (nodeId: string) => {
-    if (enabledTool === 'logicConnector') {
+    if (enabledTool === "logicConnector") {
       if (!sourceNode) {
         setSourceNode(nodeId);
       } else if (sourceNode && !targetNode) {
@@ -102,15 +105,16 @@ export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
     }
   };
 
+  
   const addEdgeFromInputs = () => {
     if (sourceNode && targetNode) {
       const newEdge: Edge = {
         id: `e${sourceNode}-${targetNode}`,
         source: sourceNode,
         target: targetNode,
-        markerEnd: { type: MarkerType.ArrowClosed, width: 12, height: 12 },
+        markerEnd: { type: MarkerType.ArrowClosed, width: 24, height: 24 },
         animated: true,
-        style: { stroke: '#71717a', strokeWidth: 2 },
+        style: { stroke: '#71717a', strokeWidth: 4 },
         label: 'Connected',
         type: 'custom',
       };
@@ -122,7 +126,7 @@ export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
 
   const handlePaneClick = useCallback(
     (event: React.MouseEvent) => {
-      if (enabledTool === 'logicBlock') {
+      if (enabledTool === "logicBlock") {
         const bounds = event.currentTarget.getBoundingClientRect();
         const position = {
           x: event.clientX - bounds.left,
@@ -203,7 +207,22 @@ export default function LogicEditor({ enabledTool }: { enabledTool: Tool }) {
         onPaneClick={handlePaneClick}
         connectionLineComponent={ConnectionLine}
         edgeTypes={edgeTypes}
-      />
+      >
+        <svg>
+          <defs>
+            <marker
+              id="arrowhead"
+              markerWidth="5"
+              markerHeight="5"
+              refX="5"
+              refY="2.5"
+              orient="auto"
+            >
+              <path d="M0,0 L0,5 L5,2.5 z" fill="#71717a" />
+            </marker>
+          </defs>
+        </svg>
+      </ReactFlow>
     </div>
   );
 }

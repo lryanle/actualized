@@ -1,29 +1,35 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
-import { Editor, Tldraw, useValue } from "tldraw";
 import SandpackReact from "@/components/sandpack/SandpackReact";
+import { useEffect, useState } from "react";
 import {
   ResizablePanel,
   ResizablePanelGroup,
   ResizableHandle,
 } from "@/components/ui/resizable";
+import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
 import NavbarWrapper from "@/components/navigation/navbar";
-import { Tool, canvasTools, editorTools, CanvasTool, EditorTool } from "@/types/tools";
+import {
+  Tool,
+  canvasTools,
+  editorTools,
+  CanvasTool,
+  EditorTool,
+} from "@/types/tools";
+import { Editor, useValue } from "tldraw";
 import LogicEditor from "@/components/logiceditor/logiceditor";
-
-const editorContext = createContext({} as { editor: Editor });
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 
 export default function Page() {
-  const [editor, setEditor] = useState<Editor | null>(null);
-  const [enabledTool, setEnabledTool] = useState<Tool>(null);
 
-  const currentToolId = useValue(
-    "current tool id",
-    () => editor?.getCurrentToolId(),
-    [editor]
-  );
+  const [editor, setEditor] = useState<Editor | null>(null);
+  const [enabledTool, setEnabledTool] = useState<Tool | null>(null);
+
+  useEffect(() => {
+    editor?.setCurrentTool(enabledTool ?? "select");
+  }, [enabledTool, editor]);
 
   return (
     <>
@@ -43,7 +49,13 @@ export default function Page() {
               <ResizablePanelGroup direction="vertical">
                 <ResizablePanel
                   defaultSize={50}
-                  className={`m-4 rounded-xl border ${enabledTool ? canvasTools.includes(enabledTool as CanvasTool) ? "border-blue-600 border-opacity-20" : "border-red-400 border-opacity-20 cursor-not-allowed" : ""}`}
+                  className={`m-4 rounded-xl border ${
+                    enabledTool
+                      ? canvasTools.includes(enabledTool as CanvasTool)
+                        ? "border-blue-600 border-opacity-20"
+                        : "border-red-400 border-opacity-20 cursor-not-allowed"
+                      : ""
+                  }`}
                 >
                   <label className="relative ml-6 text-muted-foreground font-bold text-sm leading-none top-1">
                     Canvas Editor
@@ -62,7 +74,13 @@ export default function Page() {
                 <ResizableHandle />
                 <ResizablePanel
                   defaultSize={50}
-                  className={`m-4 rounded-xl border ${enabledTool ? editorTools.includes(enabledTool as EditorTool) ? "border-blue-600 border-opacity-20" : "border-red-400 border-opacity-20 cursor-not-allowed" : ""}`}
+                  className={`m-4 rounded-xl border ${
+                    enabledTool
+                      ? editorTools.includes(enabledTool as EditorTool)
+                        ? "border-blue-600 border-opacity-20"
+                        : "border-red-400 border-opacity-20 cursor-not-allowed"
+                      : ""
+                  }`}
                 >
                   <label className="relative ml-6 text-muted-foreground font-bold text-sm leading-none top-1">
                     Logic Editor
