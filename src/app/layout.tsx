@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google"
-import NavbarWrapper from "@/components/navigation/navbar-wrapper";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
 
 const opensans = Open_Sans({
@@ -20,12 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${opensans.className} antialiased`}
-      >
-        {children}
-        <NavbarWrapper />
-      </body>
+      <body className={`${opensans.className} antialiased`}>{children}</body>
     </html>
   );
 }
