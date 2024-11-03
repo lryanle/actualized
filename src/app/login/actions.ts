@@ -44,3 +44,7 @@ export async function signup(formData: FormData) {
   revalidatePath("/", "layout");
   redirect("/");
 }
+
+export async function signOut() {
+  const { error } = await (await createClient()).auth.signOut();
+}
